@@ -459,9 +459,9 @@ class LgRemoteControl extends LitElement {
     _media_player_turn_on(mac, ip) {
         if (this.config.mac) {
             this.hass.callService("wake_on_lan", "send_magic_packet", {
-                broadcast_port: 9,
-				mac: mac,
-				broadcast_address: ip
+                "broadcast_port" : "9",
+				"mac": "mac",
+				"broadcast_address": "ip"
             });
         } else {
             this._media_player_service("turn_on");   
