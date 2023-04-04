@@ -257,6 +257,7 @@ class LgRemoteControl extends LitElement {
         const buttonColor = this.config.colors && this.config.colors.buttons ? this.config.colors.buttons : "var(--secondary-background-color)";
         const textColor = this.config.colors && this.config.colors.texts ? this.config.colors.texts : "var(--primary-text-color)";
         const mac = this.config.mac;
+		const ip = this.config.ip;
 
         return html`
             <div class="card">
@@ -267,7 +268,7 @@ class LgRemoteControl extends LitElement {
                   <div class="grid-container-power"  style="--remotewidth: ${remoteWidth}">
                       <button class="btn-flat flat-high ripple" @click=${() => this._channelList()}><ha-icon icon="mdi:format-list-numbered"/></button>
                       ${stateObj.state === 'off' ? html`
-                      <button class="btn ripple" @click=${() => this._media_player_turn_on(mac)}><ha-icon icon="mdi:power" style="color: ${textColor};"/></button>
+                      <button class="btn ripple" @click=${() => this._media_player_turn_on(mac, ip)}><ha-icon icon="mdi:power" style="color: ${textColor};"/></button>
                       ` : html`
                       <button class="btn ripple" @click=${() => this._media_player_service("turn_off")}><ha-icon icon="mdi:power" style="color: red;"/></button>
                       `}
@@ -455,10 +456,12 @@ class LgRemoteControl extends LitElement {
             command: command
         });
     }
-    _media_player_turn_on(mac) {
+    _media_player_turn_on(mac, ip) {
         if (this.config.mac) {
             this.hass.callService("wake_on_lan", "send_magic_packet", {
-                mac: mac
+                broadcast_port: 9,
+				mac: mac,
+				broadcast_address: ip
             });
         } else {
             this._media_player_service("turn_on");   
